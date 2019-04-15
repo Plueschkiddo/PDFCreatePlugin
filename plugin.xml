@@ -32,6 +32,7 @@
         </config-file>
 
         <source-file src="src/android/PDFCreate.java" target-dir="src/com/plueschkiddo/cordova/plugin" />
-		<resource-file src="src/android/resources/VorlageGelos.pdf" target="res/VorlageGelos.pdf" />
+		<asset src="src/android/resources/VorlageGELOS.pdf" target="VorlageGELOS.pdf"/>
+		<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     </platform>
 </plugin>

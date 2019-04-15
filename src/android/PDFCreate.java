@@ -1,5 +1,9 @@
 package com.plueschkiddo.cordova.plugin;
 
+// Android specific imports
+import android.os.Environment;
+import android.content.res.AssetManager;
+
 // Cordova-required packages
 import org.apache.cordova.CallbackContext;
 import org.apache.cordova.CordovaPlugin;
@@ -16,6 +20,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 
 // file-manipulation-required packages
 import java.io.File;
+import java.io.InputStream;
 
 // error-handling-required packages
 import java.io.IOException;
@@ -41,12 +46,21 @@ public class PDFCreate extends CordovaPlugin {
         callbackContext.error("Error encountered: " + e.getMessage());
         return false;
       }
+
+		AssetManager assetManager = this.cordova.getActivity().getApplicationContext().getAssets();
+		InputStream pdfAsset = null;
 		
-		URL url = PDFCreate.class.getClassLoader().getResource("VorlageGELOS.pdf");
+		try{
+			pdfAsset = assetManager.open("VorlageGELOS.pdf");
+		} catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		// URL url = PDFCreate.class.getClassLoader().getResource("VorlageGELOS.pdf");
 //      Loading an existing document
         PDDocument doc = null;
         try {
-            doc = PDDocument.load(new File(url.getPath()));
+            doc = PDDocument.load(pdfAsset);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -114,13 +128,13 @@ public class PDFCreate extends CordovaPlugin {
         }
 
 
-        // try {
-            // doc.save("c:\\users\\user\\downloads\\file.pdf");
-        // } catch (ioexception e) {
-            // e.printstacktrace();
-        // }
+        try {
+            doc.save(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println("PDF Document has been created successfully!");
+        // System.out.println("PDF Document has been created successfully!");
 
 //      closes the document
         try {
